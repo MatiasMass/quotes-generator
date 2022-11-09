@@ -1,25 +1,41 @@
-import logo from './logo.svg';
+import {useState, useEffect} from 'react'
+import quotesService from './services/quotes'
 import './App.css';
 
+
 function App() {
+
+  const [quotes, setQuotes] = useState([])
+  const [quote, setQuote] = useState([])
+  useEffect(() => {
+    quotesService
+      .getAllQuotes()
+      .then(initialQuotes =>{
+        setQuotes(initialQuotes) 
+        setQuote(initialQuotes[0])
+      })
+  }, [])
+  
+  const random = () => {
+    let ran = Math.floor(Math.random() * quotes.length) 
+    // console.log(quotes[ran]);
+    setQuote(quotes[ran])
+  }
+
+  // console.log(quote);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="container">
+        <p>"{quote.text}"</p>
+        {quote.author ? <h4>{quote.author}</h4> : <h4>Without author</h4>}
+        <div className="button-container">
+          <button onClick={() => random()}>Get Quote</button>
+        </div>
+      </div>
     </div>
   );
+
 }
 
 export default App;
